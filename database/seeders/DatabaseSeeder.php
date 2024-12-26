@@ -8,6 +8,7 @@ class DatabaseSeeder extends Seeder
 {
     private $seeders = [
         AuthorSeeder::class,
+        GenreSeeder::class,
     ];
 
     /**
