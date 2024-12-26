@@ -1,0 +1,51 @@
+volumes:
+  db_data:
+  cache_data:
+  s3_data:
+  mail_data:
+
+services:
+  db:
+    image: docker.io/library/postgres:16
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      PGDATA: /data/db
+    volumes:
+      - db_data:/data
+  
+  cache:
+    image: docker.io/library/redis:7
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    volumes:
+      - cache_data:/data
+  
+  s3:
+    image: quay.io/minio/minio:latest
+    restart: unless-stopped
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      MINIO_ROOT_USER: ${AWS_ACCESS_KEY_ID}
+      MINIO_ROOT_PASSWORD: ${AWS_SECRET_ACCESS_KEY}
+    volumes:
+      - s3_data:/data
+    command: server /data --console-address ":9001"
+
+  mailhog:
+    image: docker.io/mailhog/mailhog:latest
+    ports:
+      - 1025:1025
+      - 8025:8025
+    environment:
+      MH_STORAGE: maildir
+      MH_MAILDIR_PATH: /data
+    volumes:
+      - mail_data:/data
