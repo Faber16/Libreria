@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Author extends Model
+class Book extends Model
 {
     use HasFactory, SoftDeletes, Timestamp;
 
@@ -16,7 +16,7 @@ class Author extends Model
      *
      * @var string
      */
-    protected $table = 'authors';
+    protected $table = 'books';
 
     /**
      * The attributes that are mass assignable.
@@ -24,12 +24,15 @@ class Author extends Model
      * @var array
      */
     protected $fillable = [
-        'full_name',
-        'alias',
-        'initials',
+        'name',
+        'picture',
+        'author_id',
+        'genre_id',
+        'slug',
+        'year_publication',
     ];
 
-    /**
+     /**
      * The attributes that should be mutated to dates.
      *
      * @var array
@@ -50,10 +53,18 @@ class Author extends Model
     ];
 
     /**
-     * Define the relationship with the Book model.
+     * Define the relationship with the Author model.
      */
-    public function books()
+    public function author()
     {
-        return $this->hasMany(Book::class);
+        return $this->belongsTo(Author::class);
+    }
+
+    /**
+     * Define the relationship with the Genre model.
+     */
+    public function genre()
+    {
+        return $this->belongsTo(Genre::class);
     }
 }
