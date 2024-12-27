@@ -6,6 +6,7 @@ use Carbon\Traits\Timestamp;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Cocur\Slugify\Bridge\Laravel\SlugifyFacade;
 
 class Genre extends Model
 {
@@ -60,4 +61,17 @@ class Genre extends Model
         return $this->hasMany(Book::class);
     }
 
+    /**
+     * Boot method to handle model events.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($genre) {
+            if (isset($genre->name)) {
+                $genre->slug = SlugifyFacade::slugify($genre->name);
+            }
+        });
+    }
 }
