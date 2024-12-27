@@ -4,6 +4,17 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+
+/**
+ * @OA\Schema(
+ *  schema="GenreRequest",
+ *  title="GenreRequest",
+ * 	@OA\Property(
+ * 		property="name",
+ * 		type="string"
+ * 	)
+ * )
+ */
 class GenreRequest extends FormRequest
 {
     /**

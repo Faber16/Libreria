@@ -4,6 +4,46 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+
+/**
+ * @OA\Schema(
+ *  schema="BookRequest",
+ *  title="BookRequest",
+ *  @OA\Property(
+ *      property="name",
+ *      type="string",
+ *      description="Name of the book",
+ *      example="The Great Gatsby"
+ *  ),
+ *  @OA\Property(
+ *      property="author_id",
+ *      type="number",
+ *      description="ID of the author",
+ *      example=1
+ *  ),
+ *  @OA\Property(
+ *      property="genre_id",
+ *      type="number",
+ *      description="ID of the genre",
+ *      example=2
+ *  ),
+ *  @OA\Property(
+ *      property="year_publication",
+ *      type="number",
+ *      description="Year of publication",
+ *      example=1925
+ *  ),
+ *  @OA\Property(
+ *      property="picture",
+ *      oneOf={
+ *          @OA\Schema(type="string", example="https://example.com/picture.jpg"),
+ *          @OA\Schema(type="null", example=null)
+ *      },
+ *      description="URL of the book's picture or null"
+ *  )
+ * )
+ */
+
 class BookRequest extends FormRequest
 {
     /**

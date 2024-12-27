@@ -4,6 +4,20 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+ /**
+ * @OA\Schema(
+ *  schema="AuthorRequest",
+ *  title="AuthorRequest",
+ * 	@OA\Property(
+ * 		property="full_name",
+ * 		type="string"
+ * 	),
+ * 	@OA\Property(
+ * 		property="alias",
+ * 		type="string"
+ * 	)
+ * )
+ */
 class AuthorRequest extends FormRequest
 {
     /**

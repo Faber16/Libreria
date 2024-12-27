@@ -6,6 +6,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+
+/**
+ * @OA\Schema(
+ *     schema="Author",
+ *     type="object",
+ *     title="Author",
+ *     properties={
+ *         @OA\Property(property="id", type="integer", example=1),
+ *         @OA\Property(property="full_name", type="string", example="John Doe"),
+ *         @OA\Property(property="alias", type="string", example="JD"),
+ *         @OA\Property(property="initials", type="string", example="J.D."),
+ *         @OA\Property(property="created_at", type="string", format="date-time", example="2024-01-01T00:00:00Z"),
+ *         @OA\Property(property="updated_at", type="string", format="date-time", example="2024-01-01T01:00:00Z"),
+ *     }
+ * )
+ */
 class Author extends Model
 {
     use HasFactory, SoftDeletes;

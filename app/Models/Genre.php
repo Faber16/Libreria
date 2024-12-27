@@ -8,6 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Cocur\Slugify\Bridge\Laravel\SlugifyFacade;
 
+
+/**
+ * @OA\Schema(
+ *     schema="Genre",
+ *     title="Genre",
+ *     description="Genre model",
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="name", type="string", example="Fantasy"),
+ *     @OA\Property(property="slug", type="string", example="fantasy"),
+ *     @OA\Property(property="created_at", type="string", format="date-time", example="2024-01-01T00:00:00Z"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time", example="2024-01-01T01:00:00Z"),
+ *     @OA\Property(property="deleted_at", type="string", format="date-time", nullable=true, example=null)
+ * )
+ */
 class Genre extends Model
 {
     use HasFactory, SoftDeletes, Timestamp;

@@ -2,6 +2,7 @@ volumes:
   db_data:
   cache_data:
   s3_data:
+  backend_data:
 
 services:
   db:
@@ -37,3 +38,15 @@ services:
     volumes:
       - s3_data:/data
     command: server /data --console-address ":9001"
+  
+  backend:
+    depends_on: [s3, db, cache]
+    image: docker.io/fabergonzalez16/libreria
+    restart: unless-stopped
+    build: .
+    ports:
+      - 8000:80
+    env_file: .env
+    volumes:
+      - .:/var/www/html:z
+      - backend_data:/var/www/html/storage
