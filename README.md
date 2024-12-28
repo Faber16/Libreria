@@ -5,6 +5,28 @@ Este proyecto es una API desarrollada en Laravel que gestiona recursos relaciona
 
 ---
 
+## 0. Clonar el Repositorio
+
+Puedes clonar este repositorio de dos maneras:
+
+- **Por SSH**  
+`
+git clone git@github.com:Faber16/Libreria.git
+`
+
+- **Por HTTPS**  
+`
+git clone https://github.com/Faber16/Libreria.git
+`
+
+Una vez clonado, ingresa a la carpeta del proyecto:
+
+`
+cd Libreria
+`
+
+---
+
 ## **Pasos para el Despliegue en Entorno de Desarrollo**
 
 ### 1. Levantar las Imágenes y Construir las que se Deban Construir
