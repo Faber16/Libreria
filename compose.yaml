@@ -3,6 +3,7 @@ volumes:
   cache_data:
   s3_data:
   backend_data:
+  backend_public_data:
 
 services:
   db:
@@ -50,3 +51,17 @@ services:
     volumes:
       - .:/var/www/html:z
       - backend_data:/var/www/html/storage
+
+  frontend:
+    depends_on: [backend]
+    image: docker.io/fabergonzalez16/libreria-frontend
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: frontend.Dockerfile
+    command: npm run dev -- --host
+    ports:
+      - 5173:5173
+    env_file: .env
+    volumes:
+      - .:/usr/src/app:z

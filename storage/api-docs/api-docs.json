@@ -610,19 +610,6 @@
                         "description": "Year of publication",
                         "type": "number",
                         "example": 1925
-                    },
-                    "picture": {
-                        "description": "URL of the book's picture or null",
-                        "oneOf": [
-                            {
-                                "type": "string",
-                                "example": "https://example.com/picture.jpg"
-                            },
-                            {
-                                "type": "null",
-                                "example": null
-                            }
-                        ]
                     }
                 },
                 "type": "object"

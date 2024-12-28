@@ -29,7 +29,7 @@ class AuthorController extends Controller
     public function index()
     {
         $authors = Cache::remember('authors', now()->addMinutes(5), function () {
-            return Author::all();
+            return Author::orderBy('created_at', 'desc')->get();
         });
 
         return response()->json($authors);

@@ -29,7 +29,7 @@ class BookController extends Controller
     public function index()
     {
         $books = Cache::remember('books', now()->addMinutes(5), function () {
-            return Book::with(['author', 'genre'])->get();
+            return Book::with(['author', 'genre'])->orderBy('created_at', 'desc')->get();
         });
 
         return response()->json($books);
@@ -60,7 +60,6 @@ class BookController extends Controller
             ->withName($request->input('name'))
             ->withYear($request->input('year_publication'))
             ->state([
-                'picture' => $request->input('picture'),
                 'author_id' => $request->input('author_id'),
                 'genre_id' => $request->input('genre_id'),
             ])

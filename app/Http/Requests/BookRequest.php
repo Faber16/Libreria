@@ -32,14 +32,6 @@ use Illuminate\Foundation\Http\FormRequest;
  *      type="number",
  *      description="Year of publication",
  *      example=1925
- *  ),
- *  @OA\Property(
- *      property="picture",
- *      oneOf={
- *          @OA\Schema(type="string", example="https://example.com/picture.jpg"),
- *          @OA\Schema(type="null", example=null)
- *      },
- *      description="URL of the book's picture or null"
  *  )
  * )
  */

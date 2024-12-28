@@ -29,7 +29,7 @@ class GenreController extends Controller
     public function index()
     {
         $genres = Cache::remember('genres', now()->addMinutes(5), function () {
-            return Genre::all();
+            return Genre::orderBy('created_at', 'desc')->get();
         });
 
         return response()->json($genres);
