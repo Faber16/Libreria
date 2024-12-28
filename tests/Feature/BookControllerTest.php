@@ -46,7 +46,6 @@ class BookControllerTest extends TestCase
             'author_id' => $author->id,
             'genre_id' => $genre->id,
             'year_publication' => 1925,
-            'picture' => 'https://example.com/picture.jpg',
         ];
 
         $response = $this->postJson('/api/books', $data);
@@ -58,7 +57,6 @@ class BookControllerTest extends TestCase
                      'author_id' => $author->id,
                      'genre_id' => $genre->id,
                      'year_publication' => 1925,
-                     'picture' => 'https://example.com/picture.jpg',
                  ]);
 
         $this->assertDatabaseHas('books', $data);
