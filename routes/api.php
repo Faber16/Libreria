@@ -6,6 +6,9 @@ use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BooksPictureController;
+use App\Http\Controllers\FilterBookController;
+
+
 
 
 
@@ -32,5 +35,5 @@ Route::apiResource('books', BookController::class);
 Route::post('books/{id}/picture', [BooksPictureController::class, 'storeImage']);
 Route::get('books/{id}/picture', [BooksPictureController::class, 'getBookImage']);
 
-
+Route::get('/books-filter/{id}', [FilterBookController::class, 'show']);
 

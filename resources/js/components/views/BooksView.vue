@@ -1,8 +1,16 @@
 <template>
     <div class="container mt-4">
         <h1>Gestión de Libros</h1>
-        <button class="btn btn-primary mb-3" @click="openCreateModal">Añadir Libro</button>
+        
+        <!-- Botones principales -->
+        <button class="btn btn-primary mb-3" @click="openCreateModal">
+            Añadir Libro
+        </button>
+        <button class="btn btn-secondary mb-3 ms-2" @click="openSearchModal">
+            Buscar Libro
+        </button>
 
+        <!-- LISTADO DE LIBROS EXISTENTES -->
         <div v-if="books.length > 0" class="list-group">
             <div
                 v-for="book in books"
@@ -20,7 +28,8 @@
                     <div>
                         <h5>{{ book.name }}</h5>
                         <p>
-                            Autor: {{ getAuthor(book.author_id) }} | Género: {{ getGenre(book.genre_id) }} |
+                            Autor: {{ getAuthor(book.author_id) }} | 
+                            Género: {{ getGenre(book.genre_id) }} | 
                             Año: {{ book.year_publication }}
                         </p>
                     </div>
@@ -42,7 +51,7 @@
             <p>No hay libros disponibles.</p>
         </div>
 
-        <!-- Modal para Crear/Editar -->
+        <!-- MODAL para Crear/Editar -->
         <div class="modal" tabindex="-1" ref="bookModal">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -65,13 +74,17 @@
                             <div class="mb-3">
                                 <label for="author_id" class="form-label">ID del Autor</label>
                                 <select required v-model="currentBook.author_id" name="author_id" id="author_id" class="form-control">
-                                    <option v-for="author in authors" :key="author.id" :value="author.id">{{ author.full_name }}</option>
+                                    <option v-for="author in authors" :key="author.id" :value="author.id">
+                                        {{ author.full_name }}
+                                    </option>
                                 </select>
                             </div>
                             <div class="mb-3">
                                 <label for="genre_id" class="form-label">ID del Género</label>
                                 <select required v-model="currentBook.genre_id" name="genre_id" id="genre_id" class="form-control">
-                                    <option v-for="genre in genres" :key="genre.id" :value="genre.id">{{ genre.name }}</option>
+                                    <option v-for="genre in genres" :key="genre.id" :value="genre.id">
+                                        {{ genre.name }}
+                                    </option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -93,7 +106,7 @@
             </div>
         </div>
 
-        <!-- Modal para Subir Imagen -->
+        <!-- MODAL para Subir Imagen -->
         <div class="modal" tabindex="-1" ref="uploadModal">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -119,6 +132,91 @@
                 </div>
             </div>
         </div>
+
+        <!-- MODAL para Buscar un libro existente y mostrar su información + sugerencias -->
+        <div class="modal" tabindex="-1" ref="searchModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Buscar Libro Existente</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <!-- Seleccionar un libro existente -->
+                        <div class="mb-3">
+                            <label for="searchBookSelect" class="form-label">Selecciona un Libro</label>
+                            <select
+                                id="searchBookSelect"
+                                v-model="searchBookId"
+                                class="form-control"
+                            >
+                                <option :value="null" disabled>-- Escoge un libro --</option>
+                                <option
+                                    v-for="bk in books"
+                                    :key="bk.id"
+                                    :value="bk.id"
+                                >
+                                    {{ bk.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <button
+                            class="btn btn-primary mb-3"
+                            @click="searchBook"
+                        >
+                            Buscar
+                        </button>
+
+                        <!-- Mostrar info del libro y sugerencias si ya buscamos uno -->
+                        <div v-if="searchedBook" class="mt-4">
+                            <h4>{{ searchedBook.name }}</h4>
+                            <p>
+                                <strong>Autor:</strong> {{ getAuthor(searchedBook.author_id) }} <br/>
+                                <strong>Género:</strong> {{ getGenre(searchedBook.genre_id) }} <br/>
+                                <strong>Año de Publicación:</strong> {{ searchedBook.year_publication }}
+                            </p>
+                            <div v-if="searchedBook.picture" class="mb-3">
+                                <img
+                                    :src="searchedBook.picture"
+                                    alt="Imagen del libro"
+                                    class="img-thumbnail"
+                                    style="width: 120px; height: 120px; object-fit: cover;"
+                                />
+                            </div>
+
+                            <hr/>
+
+                            <h5>Sugerencias (mismo género)</h5>
+                            <div v-if="searchedSuggestions.length > 0" class="list-group">
+                                <div
+                                    v-for="sBook in searchedSuggestions"
+                                    :key="sBook.id"
+                                    class="list-group-item d-flex align-items-center"
+                                >
+                                    <img
+                                        v-if="sBook.picture"
+                                        :src="sBook.picture"
+                                        alt="Imagen del libro sugerido"
+                                        class="img-thumbnail me-3"
+                                        style="width: 60px; height: 60px; object-fit: cover;"
+                                    />
+                                    <div>
+                                        <strong>{{ sBook.name }}</strong><br/>
+                                        Autor: {{ getAuthor(sBook.author_id) }} | 
+                                        Año: {{ sBook.year_publication }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-else>
+                                <p>No hay sugerencias para este libro.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -129,22 +227,38 @@ import { Modal } from 'bootstrap';
 const books = ref([]);
 const genres = ref([]);
 const authors = ref([]);
+
+// Para crear/editar libros
 const currentBook = ref({
     name: '',
     author_id: '',
     genre_id: '',
     year_publication: '',
 });
-const selectedBookId = ref(null);
 const isEditing = ref(false);
+
+// Para subir imagen
+const selectedBookId = ref(null);
+
+// PARA LA BÚSQUEDA
+const searchBookId = ref(null);       // ID del libro seleccionado en el modal de búsqueda
+const searchedBook = ref(null);       // Almacena la info del libro buscado
+const searchedSuggestions = ref([]);  // Almacena las sugerencias
+
+// Referencias a modales
 const bookModal = ref(null);
 const uploadModal = ref(null);
+const searchModal = ref(null);
+
 let bookModalInstance;
 let uploadModalInstance;
+let searchModalInstance;
 
 const fetchBooks = async () => {
     const response = await fetch('/api/books');
     const booksData = await response.json();
+
+    // Ajustar para cargar la imagen (si existe)
     books.value = await Promise.all(
         booksData.map(async (book) => {
             const pictureResponse = await fetch(`/api/books/${book.id}/picture`);
@@ -154,6 +268,16 @@ const fetchBooks = async () => {
             };
         })
     );
+};
+
+const fetchAuthors = async () => {
+    const response = await fetch('/api/authors');
+    authors.value = await response.json();
+};
+
+const fetchGenres = async () => {
+    const response = await fetch('/api/genres');
+    genres.value = await response.json();
 };
 
 const openCreateModal = () => {
@@ -225,42 +349,71 @@ const uploadPicture = async () => {
     fetchBooks();
 };
 
-const fetchAuthors = async () => {
-    const response = await fetch('/api/authors');
-    authors.value = await response.json();
+// Abrir modal de búsqueda
+const openSearchModal = () => {
+    // Limpiamos la búsqueda anterior
+    searchBookId.value = null;
+    searchedBook.value = null;
+    searchedSuggestions.value = [];
+    searchModalInstance.show();
 };
 
-const fetchGenres = async () => {
-    const response = await fetch('/api/genres');
-    genres.value = await response.json();
+// Buscar libro y sugerencias
+const searchBook = async () => {
+    if (!searchBookId.value) {
+        alert('Selecciona un libro para buscar');
+        return;
+    }
+    // Ajustamos la URL a /api/books-filter/{id}
+    const response = await fetch(`/api/books-filter/${searchBookId.value}`);
+    if (!response.ok) {
+        alert('No se pudo obtener la información del libro.');
+        return;
+    }
+
+    const data = await response.json();
+    // data = { book, suggested_books }
+
+    // Cargar la imagen para el libro principal
+    const pictureRes = await fetch(`/api/books/${data.book.id}/picture`);
+    const bookPicture = pictureRes.ok ? pictureRes.url : null;
+    searchedBook.value = {
+        ...data.book,
+        picture: bookPicture,
+    };
+
+    // Cargar imagen en cada sugerencia
+    searchedSuggestions.value = await Promise.all(
+        data.suggested_books.map(async (sBook) => {
+            const picRes = await fetch(`/api/books/${sBook.id}/picture`);
+            return {
+                ...sBook,
+                picture: picRes.ok ? picRes.url : null,
+            };
+        })
+    );
 };
 
 const getAuthor = (id) => {
     if (authors.value.length === 0) return 'Cargando...';
-    for (let i = 0; i < authors.value.length; i++) {
-        if (authors.value[i].id === id) {
-            return authors.value[i].full_name;
-        }
-    }
-    return 'NN';
+    const foundAuthor = authors.value.find((author) => author.id === id);
+    return foundAuthor ? foundAuthor.full_name : 'NN';
 };
+
 const getGenre = (id) => {
     if (genres.value.length === 0) return 'Cargando...';
-
-    for (let i = 0; i < genres.value.length; i++) {
-        if (genres.value[i].id === id) {
-            return genres.value[i].name;
-        }
-    }
-    return 'Desconocido';
+    const foundGenre = genres.value.find((genre) => genre.id === id);
+    return foundGenre ? foundGenre.name : 'Desconocido';
 };
 
 onMounted(() => {
     fetchAuthors();
     fetchGenres();
     fetchBooks();
+
     bookModalInstance = new Modal(bookModal.value);
     uploadModalInstance = new Modal(uploadModal.value);
+    searchModalInstance = new Modal(searchModal.value);
 });
 </script>
 
